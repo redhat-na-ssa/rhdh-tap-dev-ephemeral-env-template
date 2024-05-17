@@ -1,0 +1,69 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ${{ values.component_id }}-dev-appset
+  namespace: janus-argocd
+spec:
+ generators:
+  - pullRequest:
+      gitlab:
+        # The GitLab project.
+        project: "${{ values.gitlab_project_id }}"
+        # For self-hosted GitLab (optional)
+        api: https://${{ values.host }}/
+        # Reference to a Secret containing an access token. (optional)
+        tokenRef:
+          secretName: ${{ values.component_id }}-git-token
+          key: token
+        # MR state is used to filter MRs only with a certain state. (optional)
+        pullRequestState: opened
+        # If true, skips validating the SCM provider's TLS certificate - useful for self-signed certificates.
+        insecure: false
+      requeueAfterSeconds: 60
+ template:
+    metadata:
+      name: '${{ values.component_id }}-{{branch}}-{{number}}'
+      namespace: janus-argocd
+    spec:
+      source:
+        repoURL: '${{ values.destination }}'
+        path: ./helm/feature
+        helm:
+          parameters:
+            - name: namespace.name
+              value: ${{ values.component_id }}-{{branch}}
+            - name: environment
+              value: dev
+            - name: "image.tag"
+              value: "latest"
+            - name: "image.host"
+              value: ${{ values.image_host }}
+            - name: "image.namespace.name"
+              value: ${{ values.component_id }}-dev
+            - name: "image.name"
+              value: ${{ values.component_id }}-{{branch}}
+            - name: "route.host"
+              value: ${{ values.component_id }}-{{branch}}${{ values.cluster }}     
+      project: "janus"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: ${{ values.component_id }}-{{branch}}
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - RespectIgnoreDifferences=true
+          - ApplyOutOfSyncOnly=true
+        retry:
+          limit: -1
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 2m
+      ignoreDifferences:
+        - group: '*'
+          kind: ServiceAccount
+          jqPathExpressions:
+            - '.imagePullSecrets[] | select(.name|test(".-dockercfg-."))'  

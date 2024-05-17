@@ -1,0 +1,16 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: feature-commit-binding
+spec:
+  params:
+    - name: git-repo-url
+      value: $(body.repository.git_http_url)
+    - name: git-revision
+      value: $(body.after)
+    - name: git-committer
+      value: $(body.user_email)
+    - name: output-image
+      value: '${{ values.image_host }}/${{ values.component_id }}-dev/${{ values.component_id }}-$(extensions.branch_name)'
+    - name: image-name
+      value: $(body.project.name)-$(extensions.branch_name)  
