@@ -111,8 +111,8 @@ spec:
             host:
               title: Repo Host
               type: string
-              description: Update the correct gitlab URL from TAP demo.
-              default: gitlab-gitlab.${{ parameters.cluster }}
+              description: Update the correct gitlab URL from TAP demo. 
+              default: gitlab-gitlab.apps.cluster-644wl.sandbox1016.opentlc.com
             owner:
               title: Repo Owner
               type: string
