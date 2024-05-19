@@ -102,7 +102,7 @@ spec:
             host:
               title: Repo Host
               type: string
-              description: Your SCM host
+              description: Update the correct SCM 
               default: gitlab-gitlab.apps.cluster-644wl.sandbox1016.opentlc.com
             owner:
               title: Repo Owner
