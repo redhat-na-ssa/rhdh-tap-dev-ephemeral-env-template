@@ -20,6 +20,9 @@ spec:
           ref:
             kind: ClusterInterceptor
             name: cel
+      name: cleanup-trig
+      template:
+        ref: cleanup-template      
     - bindings:
         - kind: TriggerBinding
           ref: commit-binding
