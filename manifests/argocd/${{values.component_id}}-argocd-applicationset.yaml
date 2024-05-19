@@ -22,7 +22,7 @@ spec:
       requeueAfterSeconds: 60
  template:
     metadata:
-      name: '${{ values.component_id }}-{{branch}}-{{number}}'
+      name: '${{ values.component_id }}-{{branch}}'
       namespace: janus-argocd
     spec:
       source:
