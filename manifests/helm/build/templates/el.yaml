@@ -8,11 +8,25 @@ spec:
   triggers:
     - bindings:
         - kind: TriggerBinding
+          ref: cleanup-binding
+      interceptors:
+        - params:
+            - name: filter
+              value: has(body.commits) && body.object_kind == 'push' && !body.ref.contains('master') && body.total_commits_count == 0
+            - name: overlays
+              value:
+                - expression: 'body.ref.split(''/'')[2]'
+                  key: branch_name
+          ref:
+            kind: ClusterInterceptor
+            name: cel
+    - bindings:
+        - kind: TriggerBinding
           ref: commit-binding
       interceptors:
         - params:
             - name: filter
-              value: has(body.commits) && body.object_kind == 'push' && body.ref.contains('master')
+              value: has(body.commits) && body.object_kind == 'push' && body.ref.contains('master') && body.total_commits_count > 0
             - name: overlays
               value: null
           ref:
@@ -27,7 +41,7 @@ spec:
       interceptors:
         - params:
             - name: filter
-              value: has(body.commits) && body.object_kind == 'push' && !body.ref.contains('master')
+              value: has(body.commits) && body.object_kind == 'push' && !body.ref.contains('master') && body.total_commits_count > 0
             - name: overlays
               value:
                 - expression: 'body.ref.split(''/'')[2]'

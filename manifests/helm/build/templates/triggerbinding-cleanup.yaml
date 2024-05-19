@@ -1,0 +1,8 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: cleanup-binding
+spec:
+  params:
+    - name: argo-app-name
+      value: $(body.project.name)-$(extensions.branch_name)
