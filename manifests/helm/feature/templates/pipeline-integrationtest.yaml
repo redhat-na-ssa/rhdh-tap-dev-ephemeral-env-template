@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1
 kind: Pipeline
 metadata:
-  name: IntegrationTest
+  name: integration-test
 spec:
   params:
     - name: source-repo
@@ -15,11 +15,10 @@ spec:
   tasks:
     - name: git-clone
       params:
-        params:
-        - name: url
-          value: $(params.source-repo)
-        - name: revision
-          value: $(params.source-branch)
+      - name: url
+        value: $(params.source-repo)
+      - name: revision
+        value: $(params.source-branch)
       taskRef:
         kind: ClusterTask
         name: git-clone
