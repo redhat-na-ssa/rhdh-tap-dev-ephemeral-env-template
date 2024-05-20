@@ -79,7 +79,7 @@ tolerations: []
 affinity: {}
 
 git:
-  branch: main
+  branch: "<<your branch name>>"
   repo: ${{ values.source_repository }}
   org: ${{ values.git_owner }}
   name: ${{ values.repository_name }}
