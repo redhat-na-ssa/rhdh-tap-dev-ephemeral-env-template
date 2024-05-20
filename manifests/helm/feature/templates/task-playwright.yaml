@@ -1,0 +1,17 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: playwright
+spec:
+  steps:
+    - computeResources: {}
+      image: 'mcr.microsoft.com/playwright:focal'
+      name: run-playwright-tests
+      script: |
+        #!/usr/bin/env bash
+        cd /workspace/source
+        npm install
+        npx playwright install
+        npx playwright test
+  workspaces:
+    - name: source

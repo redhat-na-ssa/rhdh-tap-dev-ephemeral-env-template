@@ -1,0 +1,39 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: IntegrationTest
+spec:
+  params:
+    - name: source-repo
+      description: source repo that contains the application code
+      type: string
+      default: {{ .Values.git.repo }}
+    - name: source-branch
+      description: source branch to build from
+      default: {{ .Values.git.branch }}
+      type: string
+  tasks:
+    - name: git-clone
+      params:
+        params:
+        - name: url
+          value: $(params.source-repo)
+        - name: revision
+          value: $(params.source-branch)
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-data
+    - name: playwright-test
+      runAfter:
+        - git-clone
+      taskRef:
+        kind: Task
+        name: playwright
+      workspaces:
+        - name: source
+          workspace: shared-data
+  workspaces:
+    - name: shared-data

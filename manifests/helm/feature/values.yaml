@@ -77,3 +77,13 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+git:
+  branch: main
+  repo: ${{ values.source_repository }}
+  org: ${{ values.git_owner }}
+  name: ${{ values.repository_name }}
+  host: ${{ values.repository_host }}
+  token: ''
+  webhookSecret: ''
+  verify_commits: ${{ values.verify_commits }}
