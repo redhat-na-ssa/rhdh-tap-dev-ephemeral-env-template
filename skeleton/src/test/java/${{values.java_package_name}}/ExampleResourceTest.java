@@ -8,7 +8,7 @@ import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
 public class ExampleResourceTest {
-
+/* Note : replace branch name to match the source when using feature branch for unit test */
     @Test
     public void testHelloEndpoint() {
         given()
