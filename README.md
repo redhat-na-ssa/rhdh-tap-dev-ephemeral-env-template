@@ -32,12 +32,24 @@ Once the application is created, start the regular build from master branch by m
 
 ``` 
    git checkout -b feature-abc
+```   
 
    # make change to index.html as part of this branch
+   # make changes to the following files
 
+   1.ExampleResource.java
+   2.ExampleResourceTest.java
+   3.api.test.js
+
+```
+   mvn quarkus:test
    git add .
    git commit -m "Added new branch"
    git push --set-upstream origin feature-abc 
 ```
 
 This will start a new build for branch `feature-abc`
+
+Once the build is complete create a merge request in gitlab for the code repo. The merge request will be monitored by application set controller and creates a new argo application and deploys the new instance of the application with feature branch.
+
+Run the integration-test pipeline which uses `playwright` framework to perform integration testing. Once completed merge the mergerequest and this cleans up the environment.
