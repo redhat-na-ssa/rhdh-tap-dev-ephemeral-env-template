@@ -2,7 +2,7 @@
 
 This repository contains the Backstage Template used to create the Kubernetes resources needed to build/deploy a simple quarkus application it shows when developer creates new branches and commit their code it builds an image with the new branch name and also when a merge request is created it deploys a new ephemeral environment to run integration testing required.
 
-Once the merge request is merged it deletes the ephemeral environement it created.
+Once the merge request is merged it deletes the ephemeral environment it created.
 
 ## Introduction
 
@@ -10,7 +10,7 @@ This template has been designed to work only with TAP demo (https://demo.redhat.
 
 ## Registering Template.
 
-This new template can be registerted on developer hub instance with Register existing component from create section. The URL should be https://github.com/redhat-na-ssa/rhdh-tap-dev-ephemeral-env-template/blob/main/template.yaml
+This new template can be registered on developer hub instance with Register existing component from create section. The URL should be https://github.com/redhat-na-ssa/rhdh-tap-dev-ephemeral-env-template/blob/main/template.yaml
 
 ## Application Flow
 
