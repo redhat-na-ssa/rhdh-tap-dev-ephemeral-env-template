@@ -34,12 +34,15 @@ Once the application is created, start the regular build from master branch by m
    git checkout -b feature-abc
 ```   
 
-   # make change to index.html as part of this branch
-   # make changes to the following files
+   
+   Make changes to the following files
 
+```
    1.ExampleResource.java
    2.ExampleResourceTest.java
    3.api.test.js
+   4.index.html
+```   
 
 ```
    mvn quarkus:test
