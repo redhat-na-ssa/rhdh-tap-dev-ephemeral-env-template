@@ -28,6 +28,9 @@ Please update the following URLs. These URL should point to current TAP demo ins
 2) Cluster URL on step 3
 3) Gitlab URL on step 4
 
+![Application Flow](assets/cluster-url-update.png.png)
+![Application Flow](assets/gitlab-url-update.png)
+
 Once the application is created, start the regular build from master branch by making a change in index.html file. Also create a new branch for the created application like `feature-abc`
 
 ``` 
