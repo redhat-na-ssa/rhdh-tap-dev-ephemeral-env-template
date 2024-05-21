@@ -7,5 +7,5 @@ test('API endpoint test', async ({ request }) => {
   expect(response.ok()).toBeTruthy();
   const data = await response.text();
   console.log('Response text:', data);
-  expect(data).toBe('Hello <<branchname>>');
+  expect(data).toBe('Hello RESTEasy <<branchname>>');
 });
