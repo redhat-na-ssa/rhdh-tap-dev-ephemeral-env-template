@@ -39,11 +39,11 @@ spec:
             - name: "image.host"
               value: ${{ values.image_host }}
             - name: "image.namespace.name"
-{{- if eq .Values.image.registry "Quay" }}
+            {%- if values.image_registry == 'Quay' %}
               value: quayadmin
-{{- else }}
+            {% else %}  
               value: ${{ values.component_id }}-dev
-{{- end }}
+            {%- endif %}
             - name: "image.name"
               value: ${{ values.component_id }}-{{branch}}
             - name: "route.host"
