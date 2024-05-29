@@ -13,6 +13,9 @@ spec:
     - name: output-image
       description: reference of the image that will get created
       default: {{ include "image.dev-url" . }}
+    - name: quay-output-image
+      description: reference of the image that will get created
+      default: {{ include "image.dev-url" . }}  
     - name: git-committer
       description: Email of user who committed the change
     - description: Image name used for scan sbom
@@ -32,6 +35,8 @@ spec:
             value: $(tt.params.git-revision)
           - name: output-image
             value: $(tt.params.output-image)
+          - name: quay-output-image
+            value: $(tt.params.quay-output-image)
           - name: sonarqube-host-url
             value: https://sonarqube-sonarqube{{ .Values.app.cluster }}
           - name: sonarqube-project-key

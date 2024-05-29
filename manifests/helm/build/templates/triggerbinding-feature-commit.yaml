@@ -14,3 +14,5 @@ spec:
       value: '${{ values.image_host }}/${{ values.component_id }}-dev/${{ values.component_id }}-$(extensions.branch_name)'
     - name: image-name
       value: $(body.project.name)-$(extensions.branch_name)  
+    - name: quay-output-image
+      value: '${{ values.image_host }}/quayadmin/${{ values.component_id }}-$(extensions.branch_name)'  
