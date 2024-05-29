@@ -13,7 +13,7 @@ Image Url image will be pushed to defaults to internal registry
 
 {{- define "sha-image.dev-url" -}}
 {{- if eq .Values.image.registry "Quay" }}
-{{- printf "%s/%s/%s" .Values.image.host .Values.image.organization .Values.image.name }}
+{{- printf "%s/%s/%s" .Values.image.host .Values.image.organization .Values.image.name "$(params.image-name)" }}
 {{- else }}
 {{- printf "default-route-openshift-image-registry%s/%s-dev/%s" .Values.app.cluster .Values.image.name "$(params.image-name)" }}
 {{- end }}
