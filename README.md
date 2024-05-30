@@ -20,11 +20,11 @@ Application flow is shown below.
 
 ## How to Demo.
 
-Create a new instance of application by using this template ("Dev Branch Builds - Securing a Quarkus Service Software Supply Chain" )once registered. This template as of now only works with internal image registry.
+Create a new instance of application by using this template ("Dev Branch Builds - Securing a Quarkus Service Software Supply Chain" )once registered. This template will work both Image Registry and Quay Registry.
 
 Please update the following URLs. These URL should point to current TAP demo instance.
 
-1) Image Registry : OpenShift on step 2
+1) Image Registry/Quay : OpenShift on step 2
 2) Cluster URL on step 3
 3) Gitlab URL on step 4
 
