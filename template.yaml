@@ -79,7 +79,7 @@ spec:
                 image_host:
                   title: Image Host
                   type: string
-                  description: Host for storing image
+                  description: Quay host from TAP demo
                   default: quay-644wl.apps.cluster-644wl.sandbox1016.opentlc.com
                 image_organization:
                   title: Organization
