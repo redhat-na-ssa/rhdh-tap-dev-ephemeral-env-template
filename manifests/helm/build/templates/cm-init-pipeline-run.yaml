@@ -49,7 +49,7 @@ data:
         - name: oidc-issuer
           value:  https://keycloak-rhsso{{ .Values.app.cluster }}/auth/realms/openshift
         - name: image-name
-          value: {{ include "image.dev-url" . }}  
+          value: {{ .Values.app.name }}
       pipelineRef:
         name: {{ .Values.app.name }}-build
       serviceAccountName: pipeline
