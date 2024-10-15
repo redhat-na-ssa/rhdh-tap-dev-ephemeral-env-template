@@ -48,6 +48,8 @@ data:
           value: $(tt.params.git-committer)
         - name: oidc-issuer
           value:  https://keycloak-rhsso{{ .Values.app.cluster }}/auth/realms/openshift
+        - name: image-name
+          value: {{ include "image.dev-url" . }}  
       pipelineRef:
         name: {{ .Values.app.name }}-build
       serviceAccountName: pipeline
