@@ -8,11 +8,28 @@ spec:
   triggers:
     - bindings:
         - kind: TriggerBinding
+          ref: cleanup-binding
+      interceptors:
+        - params:
+            - name: filter
+              value: has(body.commits) && body.object_kind == 'push' && !body.ref.contains('master') && body.total_commits_count == 0
+            - name: overlays
+              value:
+                - expression: 'body.ref.split(''/'')[2]'
+                  key: branch_name
+          ref:
+            kind: ClusterInterceptor
+            name: cel
+      name: cleanup-trig
+      template:
+        ref: cleanup-template      
+    - bindings:
+        - kind: TriggerBinding
           ref: commit-binding
       interceptors:
         - params:
             - name: filter
-              value: has(body.commits) && body.object_kind == 'push'
+              value: has(body.commits) && body.object_kind == 'push' && body.ref.contains('master') && body.total_commits_count > 0
             - name: overlays
               value: null
           ref:
@@ -21,6 +38,23 @@ spec:
       name: commit-trig
       template:
         ref: {{ .Values.app.name }}-run-build
+    - bindings:
+        - kind: TriggerBinding
+          ref: feature-commit-binding
+      interceptors:
+        - params:
+            - name: filter
+              value: has(body.commits) && body.object_kind == 'push' && !body.ref.contains('master') && body.total_commits_count > 0
+            - name: overlays
+              value:
+                - expression: 'body.ref.split(''/'')[2]'
+                  key: branch_name
+          ref:
+            kind: ClusterInterceptor
+            name: cel
+      name: feature-commit-trig
+      template:
+        ref: {{ .Values.app.name }}-run-build    
     - bindings:
         - kind: TriggerBinding
           ref: tag-binding-preprod

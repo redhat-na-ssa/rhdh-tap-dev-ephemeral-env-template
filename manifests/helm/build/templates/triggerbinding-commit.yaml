@@ -10,3 +10,5 @@ spec:
       value: $(body.after)
     - name: git-committer
       value: $(body.user_email)
+    - name: image-name
+      value: $(body.project.name)  

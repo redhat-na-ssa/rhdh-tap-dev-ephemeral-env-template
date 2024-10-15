@@ -13,8 +13,13 @@ spec:
     - name: output-image
       description: reference of the image that will get created
       default: {{ include "image.dev-url" . }}
+    - name: quay-output-image
+      description: reference of the image that will get created
+      default: {{ include "image.dev-url" . }}  
     - name: git-committer
       description: Email of user who committed the change
+    - description: Image name used for scan sbom
+      name: image-name  
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
@@ -30,6 +35,8 @@ spec:
             value: $(tt.params.git-revision)
           - name: output-image
             value: $(tt.params.output-image)
+          - name: quay-output-image
+            value: $(tt.params.quay-output-image)
           - name: sonarqube-host-url
             value: https://sonarqube-sonarqube{{ .Values.app.cluster }}
           - name: sonarqube-project-key
@@ -58,6 +65,8 @@ spec:
             value: $(tt.params.git-committer)
           - name: oidc-issuer
             value:  https://keycloak-rhsso{{ .Values.app.cluster }}/auth/realms/openshift
+          - name: image-name
+            value: $(tt.params.image-name) 
         pipelineRef:
           name: {{ .Values.app.name }}-build
         serviceAccountName: pipeline
