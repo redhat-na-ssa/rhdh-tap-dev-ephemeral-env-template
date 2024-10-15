@@ -19,9 +19,6 @@ spec:
     - name: output-image
       description: reference of the image that will get created
       default: {{ include "image.dev-url" . }}
-    - name: quay-output-image
-      description: reference of the image that will get created
-      default: {{ include "image.dev-url" . }}  
       type: string
     - name: sonarqube-host-url
       type: string
@@ -51,8 +48,6 @@ spec:
       type: string
     - name: oidc-issuer
       type: string
-    - name: image-name
-      type: string  
   tasks:
     - name: git-clone
       params:
@@ -120,13 +115,7 @@ spec:
     - name: build-sign-image
       params:
       - name: IMAGE
-{{- if eq .Values.image.registry "Quay" }}
-        value: $(params.quay-output-image) 
-{{- else }}
-        value: $(params.output-image) 
-{{- end }}
-
-
+        value: $(params.output-image)
       runAfter:
       - scan-source
       taskRef:
@@ -134,6 +123,32 @@ spec:
         name: buildah
       workspaces:
       - name: source
+        workspace: source-folder
+    - name: upload-sbom-to-tpa
+      runAfter:
+      - build-sign-image
+      taskRef:
+        kind: Task
+        name: upload-sbom-to-tpa
+      params:
+      - name: COMPONENT_ID
+        value: $(params.component-id)
+      workspaces:
+      - name: sboms
+        workspace: source-folder
+    - name: upload-sbom-to-cyclonedx-repo
+      params:
+      - name: cyclonedxHostUrl
+        value: $(params.cyclonedx-host-url)
+      - name: image
+        value: {{ include "sha-image.dev-url" . }}@$(tasks.build-sign-image.results.IMAGE_DIGEST)
+      runAfter:
+      - build-sign-image
+      taskRef:
+        kind: Task
+        name: upload-sbom-to-cyclonedx-repo
+      workspaces:
+      - name: repository
         workspace: source-folder
     - name: acs-image-check
       params:
@@ -148,7 +163,8 @@ spec:
       - name: image_digest
         value: $(tasks.build-sign-image.results.IMAGE_DIGEST)
       runAfter:
-      - build-sign-image
+      - upload-sbom-to-tpa
+      - upload-sbom-to-cyclonedx-repo
       taskRef:
         kind: Task
         name: acs-image-check
@@ -168,7 +184,8 @@ spec:
       - name: image_digest
         value: $(tasks.build-sign-image.results.IMAGE_DIGEST)
       runAfter:
-      - build-sign-image
+      - upload-sbom-to-tpa
+      - upload-sbom-to-cyclonedx-repo
       taskRef:
         kind: Task
         name: acs-image-scan
@@ -195,26 +212,11 @@ spec:
         kind: Task
         name: acs-deploy-check
       runAfter:
-      - build-sign-image
+      - upload-sbom-to-tpa
+      - upload-sbom-to-cyclonedx-repo
       workspaces:
       - name: reports
         workspace: reports
-    - name: scan-export-sbom
-      params:
-      - name: cyclonedxHostUrl
-        value: $(params.cyclonedx-host-url)
-      - name: image
-        value: {{ include "sha-image.dev-url" . }}@$(tasks.build-sign-image.results.IMAGE_DIGEST)
-      runAfter:
-      - acs-image-check
-      - acs-image-scan
-      - acs-deploy-check
-      taskRef:
-        kind: Task
-        name: scan-export-sbom
-      workspaces:
-      - name: repository
-        workspace: source-folder
     - name: query-rekor-signed-provenance
       params:
       - name: imageDigest
@@ -233,7 +235,6 @@ spec:
       - name: COMPONENT_ID
         value: $(params.component-id)
       runAfter:
-      - scan-export-sbom
       - query-rekor-signed-provenance
       taskRef:
         kind: Task

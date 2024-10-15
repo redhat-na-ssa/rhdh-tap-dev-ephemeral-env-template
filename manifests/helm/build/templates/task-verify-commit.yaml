@@ -11,11 +11,11 @@ spec:
   - description: Email address of committer
     name: certificate-identity
     type: string
-    default: user1@opentlc.com
+    default: user1@demo.redhat.com
   - description: OIDC issuer
     name: oidc-issuer
     type: string
-    default: https://keycloak-keycloak-system.apps.cluster-v42rv.sandbox795.opentlc.com/auth/realms/sigstore
+    default: https://keycloak-rhsso.apps.cluster-v42rv.sandbox795.opentlc.com/auth/realms/sigstore
   - description: Rekor URL
     name: rekor-url
     type: string

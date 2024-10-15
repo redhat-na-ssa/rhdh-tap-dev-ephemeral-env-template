@@ -32,7 +32,7 @@ spec:
       type: string
   steps:
   - script: |
-      git config --global user.email "root@opentlc.com"
+      git config --global user.email "root@demo.redhat.com"
 
       git config --global user.name "Administrator"
 
@@ -46,7 +46,7 @@ spec:
 
       FILE=$(params.component-id)-argocd-app-$ENVIRON.yaml
 
-      sed -i "22s/.*/        value: $(params.image-tag)/" argocd/$FILE
+      sed -i "22s/.*/        value: '$(params.image-tag)'/" argocd/$FILE
 
       git add .
 
@@ -64,9 +64,11 @@ spec:
   - script: |
       argocd login --grpc-web --username admin  --password $COMMON_PASSWORD $(params.argocd-host)
 
+      argocd app terminate-op $(params.component-id)-bootstrap > /dev/null 2>&1 || echo ''
       argocd app sync --async $(params.component-id)-bootstrap
     image: 'quay.io/redhat-gpte/argocd-cli:v2.8.4'
     name: sync
+    onError: continue
     env:
     - name: COMMON_PASSWORD
       valueFrom:
